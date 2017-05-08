@@ -14,4 +14,6 @@
         completions."
     </string>
     <string name="termal_head_id">Enter termal head ID:</string>
+    <string name="choose_heat_level">Choose heat level:</string>
+    <string name="warm_it">WarmIT</string>
 </resources>

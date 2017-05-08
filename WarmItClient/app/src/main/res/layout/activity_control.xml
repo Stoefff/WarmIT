@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp"
+    android:orientation="vertical"
+    android:gravity="center"
+    tools:context="com.warmit.stoeff.warmitclient.ControlActivity">
+
+
+    <TextView
+        android:gravity="center_horizontal"
+        android:textSize="24sp"
+        android:text="@string/choose_heat_level"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <SeekBar
+        android:id="@+id/seek_bar"
+        android:progress="0"
+        android:max="5"
+        android:layout_marginTop="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/tv_seekbar_value"
+        android:gravity="center_horizontal"
+        android:textSize="24sp"
+        android:text="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:id="@+id/btn_warm_it"
+        android:layout_marginTop="16dp"
+        android:textColor="@android:color/white"
+        android:background="@color/colorPrimary"
+        android:text="@string/warm_it"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</LinearLayout>

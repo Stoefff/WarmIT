@@ -1,8 +1,21 @@
 package com.warmit.stoeff.warmitclient.model;
 
-/**
- * Created by stoeff on 09/05/17.
- */
+import com.google.gson.annotations.SerializedName;
 
 public class Heat {
+
+    @SerializedName("heat")
+    private int value;
+
+    public Heat(int value) {
+        this.value = value;
+    }
+
+    public int getValue() {
+        return value;
+    }
+
+    public void setValue(int value) {
+        this.value = value;
+    }
 }
