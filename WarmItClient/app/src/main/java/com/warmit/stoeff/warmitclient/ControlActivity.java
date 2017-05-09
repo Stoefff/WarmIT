@@ -1,6 +1,9 @@
 package com.warmit.stoeff.warmitclient;
 
 import android.app.ProgressDialog;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.warmit.stoeff.warmitclient.model.Heat;
+import com.warmit.stoeff.warmitclient.util.PermissionUtils;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -30,6 +34,13 @@ public class ControlActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_control);
+
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.setDisplayHomeAsUpEnabled(true);
+            supportActionBar.setDisplayShowHomeEnabled(true);
+        }
+
         initComponents();
         setComponentsListeners();
 
@@ -39,6 +50,12 @@ public class ControlActivity extends AppCompatActivity {
 
         ip = getIntent().getStringExtra(IdActivity.IP);
         showToast("Yo I received the ip: " + ip);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
     private void initComponents() {
@@ -74,21 +91,42 @@ public class ControlActivity extends AppCompatActivity {
                 if (ip == null || ip.isEmpty()) {
                     showToast("Invalid IP");
                 }else {
-                    progressDialog.show();
-                    int progress = seekBar.getProgress();
-                    warmItWithValue(progress);
+                    boolean hasPermission = PermissionUtils.checkInternerPermissions(ControlActivity.this);
+                    if (hasPermission) {
+                        progressDialog.show();
+                        int progress = seekBar.getProgress();
+                        warmItWithValue(progress);
+                    }else {
+                        showToast("No internet permission");
+                    }
                 }
             }
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionUtils.INTERNET_PERMISSIONS_REQUEST_CODE) {
+            if (permissions.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                progressDialog.show();
+                int progress = seekBar.getProgress();
+                warmItWithValue(progress);
+            }else {
+                showToast("Cannot proceed without this permission");
+            }
+        }
+    }
+
     private void warmItWithValue(int value) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://" + ip)
+                .baseUrl("http://" + ip + "/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         Heat heat = new Heat(value);
+
+        showToast("heat val: " + heat.getValue());
 
         retrofit.create(ClientAPI.class)
                 .changeHeat(heat)

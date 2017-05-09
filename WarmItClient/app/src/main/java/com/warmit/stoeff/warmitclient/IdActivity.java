@@ -2,6 +2,8 @@ package com.warmit.stoeff.warmitclient;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,11 +12,13 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.warmit.stoeff.warmitclient.model.Ip;
+import com.warmit.stoeff.warmitclient.util.PermissionUtils;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IdActivity extends AppCompatActivity {
 
@@ -45,19 +49,43 @@ public class IdActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                progressDialog.show();
-                String termalId = etTermaId.getText().toString();
-                sendTermalId(termalId);
+                boolean hasPermission = PermissionUtils.checkInternerPermissions(IdActivity.this);
+                if (hasPermission) {
+                    progressDialog.show();
+                    String termalId = etTermaId.getText().toString();
+                    sendTermalId(termalId);
+                }else {
+                    showToast("No internet permission");
+                }
             }
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionUtils.INTERNET_PERMISSIONS_REQUEST_CODE) {
+            if (permissions.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                progressDialog.show();
+                String termalId = etTermaId.getText().toString();
+                sendTermalId(termalId);
+            }else {
+                showToast("Cannot proceed without this permission");
+            }
+        }
+    }
+
     private void sendTermalId(String termalId) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://224.0.0.1")
+                .baseUrl("http://224.0.0.1/")
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        retrofit.create(ClientAPI.class)
+        showToast("termalId: " + termalId);
+
+        startActivityWithIp("www.example.com");
+        progressDialog.hide();
+       /* retrofit.create(ClientAPI.class)
                 .fetchIP(termalId)
                 .enqueue(new Callback<Ip>() {
                     @Override
@@ -80,14 +108,13 @@ public class IdActivity extends AppCompatActivity {
                         showToast("Something went wrong, check your connectivity and try again");
                         t.printStackTrace();
                     }
-                });
+                });*/
     }
 
     private void startActivityWithIp(String ip) {
         Intent intent = new Intent(this, ControlActivity.class);
         intent.putExtra(IP, ip);
         startActivity(intent);
-        finish();
     }
 
     private void showToast(String msg) {
