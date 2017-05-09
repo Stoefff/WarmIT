@@ -83,9 +83,9 @@ public class IdActivity extends AppCompatActivity {
 
         showToast("termalId: " + termalId);
 
-        startActivityWithIp("www.example.com");
-        progressDialog.hide();
-       /* retrofit.create(ClientAPI.class)
+//        startActivityWithIp("www.example.com");
+//        progressDialog.hide();
+        retrofit.create(ClientAPI.class)
                 .fetchIP(termalId)
                 .enqueue(new Callback<Ip>() {
                     @Override
@@ -108,7 +108,7 @@ public class IdActivity extends AppCompatActivity {
                         showToast("Something went wrong, check your connectivity and try again");
                         t.printStackTrace();
                     }
-                });*/
+                });
     }
 
     private void startActivityWithIp(String ip) {

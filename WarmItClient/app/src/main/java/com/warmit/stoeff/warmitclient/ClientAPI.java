@@ -15,7 +15,7 @@ public interface ClientAPI {
     @GET("/id/{termal_id}")
     Call<Ip> fetchIP(@Path("termal_id") String termalId);
 
-    @POST("/{ip}")
+    @POST("/")
     Call<ResponseBody> changeHeat(@Body Heat heat);
 }
 
