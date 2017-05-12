@@ -10,8 +10,8 @@ const int motorTerminal2 = 2; // Digital Pin 4 connects to motor terminal 2     
 const int enablePin = 14; // Digital pin 8/9 connects to the enable pin                old 9 
 
 
-const char* ssid = "#FreaKzzy";
-const char* password = "TARAKSAKUM4edanebaratneta03"; //delete plz
+const char* ssid = "JulyS6Hot";
+const char* password = "eksdididi"; //delete plz
 const char* ID = "123456";
 int heat = 0; 
 
@@ -94,12 +94,12 @@ void positive_motion(int* time_wanted){
    long int i;
 
    /* Mark beginning time */
-   begin = clock();
+//   begin = clock();
    for (i=0;1;i++){
     digitalWrite(motorTerminal1, LOW); //these logic levels create forward direction
     digitalWrite(motorTerminal2, HIGH);
-    time_spent = (double)(clock() - begin) / CLOCKS_PER_SEC;
-    if (time_spent> time_wanted)
+//    time_spent = (double)(clock() - begin) / CLOCKS_PER_SEC;
+    if ( (int)time_spent> (int)time_wanted)
       break;
    }
 }
@@ -110,12 +110,12 @@ void negative_motion(int* time_wanted){
    long int i;
 
    /* Mark beginning time */
-   begin = clock();
+//   begin = clock();
    for (i=0;1;i++){
     digitalWrite(motorTerminal1, HIGH); // these logic levels create reverse direction
     digitalWrite(motorTerminal2, LOW);
-    time_spent = (double)(clock() - begin) / CLOCKS_PER_SEC;
-    if (time_spent> time_wanted)
+//    time_spent = (double)(clock() - begin) / CLOCKS_PER_SEC;
+    if ((int)time_spent > (int)time_wanted)
       break;
    }
 }
